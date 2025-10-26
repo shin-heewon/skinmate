@@ -29,6 +29,11 @@ langchain-openai==0.1.23
 langchain-core==0.2.39
 langchain==0.2.16
 langgraph==0.2.28
+langchain-community==0.2.16  # BM25Retriever, EnsembleRetriever
 
 # JWT 검증
 PyJWT==2.8.0
+
+# RAG 파이프라인
+langchain-qdrant==0.1.4  # Qdrant 통합 (QdrantVectorStore 지원)
+rank-bm25==0.2.2  # BM25 알고리즘
