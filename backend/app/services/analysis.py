@@ -158,5 +158,7 @@ class AnalysisService:
         
         return True
     
-    # 분석 이력 조회 및 삭제 기능 추가 완료
+    @staticmethod
+    def get_by_id(db: Session, analysis_id: int):
+        return AnalysisRepository.get_by_id(db, analysis_id)
 

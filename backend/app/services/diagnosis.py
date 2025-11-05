@@ -1,5 +1,6 @@
 import re
 import os
+from typing import Optional
 from PIL import Image
 from sqlalchemy.orm import Session
 from langchain_openai import ChatOpenAI
@@ -69,3 +70,7 @@ class DiagnosisService:
         
         # 에러 없을 때만 DB에 저장
         return DiagnosisRepository.create(db, diagnosis_data)
+    
+    @staticmethod
+    def get_by_analysis_id(db: Session, analysis_id: int) -> Optional[Diagnosis]:
+        return DiagnosisRepository.get_by_analysis_id(db, analysis_id)
