@@ -39,16 +39,12 @@ def get_db():
         db.close()
 
 
-# 앱 시작 시 테이블 생성 (VIEW 제외)
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """애플리케이션 시작/종료 시 실행되는 lifecycle 함수"""
-    # 시작 시 실행 - VIEW를 제외하고 테이블만 생성
+# 테이블 생성 함수 (lifespan에서 사용)
+def create_tables():
+    """VIEW를 제외하고 테이블만 생성"""
     tables_to_create = [
         table for table in Base.metadata.sorted_tables 
         if not table.info.get('is_view', False)
     ]
     Base.metadata.create_all(bind=engine, tables=tables_to_create)
-    yield
-    # 종료 시 실행 (필요시)
 

@@ -1,14 +1,37 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from contextlib import asynccontextmanager
 import uvicorn
-from app.core.config.database import lifespan
+from app.core.config.database import create_tables
+from app.core.config.vectordb import init_rag_system
 from app.core.config.file import STATIC_DIR
 from app.core.config.cors import get_cors_config
 from app.core.config.openapi import custom_openapi
 from app.core.exception import ApiException, api_exception_handler
 from app.core.middleware.auth_middleware import JWTMiddleware
 from app.router import member_router, analysis_router, file_router, like_router, cosmetic_router, test_router, chat_router
+from app.core.config.logging import get_logger
 from fastapi.middleware.cors import CORSMiddleware
+
+logger = get_logger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 시작 시 실행
+    # 1. RDB 테이블 생성
+    create_tables()
+    # logger.info("데이터베이스 테이블 생성 완료")
+    
+    # 2. RAG 시스템 초기화 (Qdrant + Retriever)
+    init_rag_system()
+    # logger.info("RAG 시스템 초기화 완료")
+    
+    yield
+    
+    # 종료 시 실행
+    # logger.info("애플리케이션 종료 중")
+
 
 # FastAPI 애플리케이션 생성 (Swagger 표시 설정)
 app = FastAPI(

@@ -35,5 +35,5 @@ langchain-community==0.2.16  # BM25Retriever, EnsembleRetriever
 PyJWT==2.8.0
 
 # RAG 파이프라인
-langchain-qdrant==0.1.4  # Qdrant 통합 (QdrantVectorStore 지원)
-rank-bm25==0.2.2  # BM25 알고리즘
+qdrant-client>=1.9.0  # Qdrant 클라이언트
+langchain-qdrant>=0.1.0  # LangChain Qdrant 통합 (deprecated된 langchain_community.vectorstores.Qdrant 대체)
