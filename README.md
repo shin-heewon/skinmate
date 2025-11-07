@@ -67,24 +67,14 @@
 
 #### HuggingFace 토큰 설정
 
-```bash
-# 터미널에서 실행
-export HF_TOKEN=your_huggingface_token_here
-```
-
-또는 노트북에서 직접 로그인:
+노트북에서 직접 로그인:
 ```python
 !huggingface-cli login
 ```
 
 #### WandB API 키 설정
 
-```bash
-# 터미널에서 실행
-export WANDB_API_KEY=your_wandb_key_here
-```
-
-또는 노트북에서 직접 로그인:
+노트북에서 직접 로그인:
 ```python
 wandb.login()
 ```
@@ -94,10 +84,7 @@ wandb.login()
 `notebooks/dataset_study.ipynb`의 Cell 5를 수정:
 
 ```python
-# 방법 1: 환경변수 사용
-export HF_DATASET_NAME=your-username/your-dataset-name
-
-# 방법 2: 노트북에서 직접 수정
+노트북에서 직접 수정
 HF_DATASET_NAME = "your-username/your-dataset-name"
 ```
 
