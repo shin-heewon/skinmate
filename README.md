@@ -9,7 +9,7 @@
 1. [RunPod Pod 생성](#1-runpod-pod-생성)
 2. [Step 1: 데이터셋 학습](#step-1-데이터셋-학습)
 3. [Step 2: 모델 병합](#step-2-모델-병합)
-4. [Step 3: vLLM 배포](#step-3-vllm-배포-⚠️-중요)
+4. [Step 3: vLLM 배포 (중요)](#step-3-vllm-배포-중요)
 5. [Step 4: 모델 테스트](#step-4-모델-테스트)
 
 ---
@@ -223,7 +223,7 @@ HF_MODEL_NAME = "your-username/your-model-name"
 
 ---
 
-## Step 3: vLLM 배포 ⚠️ 중요
+## Step 3: vLLM 배포 (중요)
 
 ### 3-1. vLLM 설치 및 배포
 
