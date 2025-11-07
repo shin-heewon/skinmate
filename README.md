@@ -57,6 +57,7 @@
 **이 파인튜닝 과정은 RunPod Pod에서 실행해야 합니다.**
 
 - 노트북 파일 3개(`dataset_study.ipynb`, `model_merge.ipynb`, `confusion_matrix.ipynb`)를 RunPod Pod에 복사하여 실행하세요
+- 배치 테스트는 `vllm_batch_test.py` 스크립트를 사용합니다 (Step 4 참고)
 - 로컬에서 실행 가능하지만, **GPU VRAM이 충분해야 합니다** (최소 24GB 이상 권장)
 - 일반적인 로컬 환경에서는 GPU 메모리 부족으로 실행이 어려울 수 있습니다
 - RunPod Pod 사용을 강력히 권장합니다
@@ -67,16 +68,18 @@
 
 #### HuggingFace 토큰 설정
 
-노트북에서 직접 로그인:
+`notebooks/dataset_study.ipynb`의 Cell 4를 수정:
+
 ```python
-!huggingface-cli login
+!huggingface-cli login --token your_huggingface_token_here
 ```
 
 #### WandB API 키 설정
 
-노트북에서 직접 로그인:
+`notebooks/dataset_study.ipynb`의 Cell 14를 수정:
+
 ```python
-wandb.login()
+wandb.login(key="your_wandb_api_key_here")
 ```
 
 #### 데이터셋 이름 설정
@@ -84,8 +87,9 @@ wandb.login()
 `notebooks/dataset_study.ipynb`의 Cell 5를 수정:
 
 ```python
-노트북에서 직접 수정
-HF_DATASET_NAME = "your-username/your-dataset-name"
+from datasets import load_dataset
+
+dataset = load_dataset("your-username/your-dataset-name")
 ```
 
 ### 1-2. 핵심 코드 이해
@@ -182,8 +186,8 @@ trainer = SFTTrainer(
 학습 완료 후 HuggingFace Hub에 업로드:
 
 ```python
-from huggingface_hub import login
-login(token=os.getenv("HF_TOKEN"))
+# HuggingFace 로그인 (토큰 직접 입력)
+!huggingface-cli login --token your_huggingface_token_here
 
 # 본인의 HuggingFace 사용자명과 모델명으로 변경하세요
 model.push_to_hub("your-username/your-model-name")
@@ -199,10 +203,7 @@ tokenizer.push_to_hub("your-username/your-model-name")
 `notebooks/model_merge.ipynb`의 Cell 2를 수정:
 
 ```python
-# 방법 1: 환경변수 사용
-export HF_MODEL_NAME=your-username/your-model-name
-
-# 방법 2: 노트북에서 직접 수정
+# 노트북에서 직접 수정
 HF_MODEL_NAME = "your-username/your-model-name"
 
 # 또는 로컬 경로 사용 (Step 1에서 outputs/ 폴더에 저장된 경우)
@@ -233,6 +234,7 @@ Pod 터미널에서 실행:
 pip install -q vllm
 
 # 2. 모델 배포 (한 줄로 실행)
+# 기본 포트 8000 사용 (--port 옵션 생략 가능)
 python3 -m vllm.entrypoints.openai.api_server --model ./model_16bit --dtype bfloat16 --tokenizer ./model_16bit
 ```
 
@@ -299,41 +301,66 @@ RunPod Pod → **"Connect"** → **"TCP Port Mapping"** → 포트 **8000** 매�
 
 ---
 
-## Step 4: 로컬 평가
+## Step 4: 모델 테스트
 
-### 4-1. API 서버 설정
+### 4-1. 배치 테스트 (권장)
 
-`notebooks/confusion_matrix.ipynb`의 Cell 8을 수정:
+Step 3에서 vLLM 배포가 완료된 후, **새 터미널**에서 배치 테스트 스크립트를 실행합니다:
 
-```python
-# 로컬 배포 (RunPod Pod 내부에서 실행)
-API_BASE_URL = "http://localhost:8000/v1"
-API_KEY = "empty"
-
-# 또는 RunPod 엔드포인트 사용
-# API_BASE_URL = "https://api.runpod.ai/v2/your-endpoint-id/openai/v1"
-# API_KEY = "your-runpod-api-key"
+```bash
+# 새 터미널에서 실행
+python vllm_batch_test.py
 ```
 
-### 4-2. 데이터셋 이름 설정
+**테스트 스크립트 기능**:
+- 테스트 이미지들을 배치로 처리
+- 정확도 및 응답 속도 측정
+- 결과를 엑셀 파일로 저장 (`vllm_test_results.xlsx`)
 
-Cell 4를 수정:
+**필요한 설정**:
+- `vllm_batch_test.py`의 `base_url` 확인 (기본: `http://localhost:8000/v1`)
+- 테스트 이미지 폴더 구조 확인 (`./test/VS_건선_정면/`, `./test/VS_아토피_정면/` 등)
 
+### 4-2. Langchain 테스트 (선택)
+
+Langchain을 사용한 테스트도 가능합니다:
+
+```bash
+# Langchain 설치
+pip install -U langchain-openai
+
+# 테스트 스크립트 실행
+python vllm_langchain_test.py
+```
+
+**Langchain 테스트 스크립트** (`vllm_langchain_test.py`):
+- Langchain의 `ChatOpenAI` 사용
+- 이미지와 텍스트를 동시에 입력 (ChatCompletion 형태)
+- 단일 이미지 테스트에 적합
+
+**주의사항**:
+- Image와 Text를 동시에 넣는 것은 **ChatCompletion** 형태여야 함
+- TextCompletion으로는 실행되지 않음
+
+### 4-3. 혼동행렬 평가 (선택)
+
+상세한 성능 분석이 필요하면 `notebooks/confusion_matrix.ipynb`를 사용합니다:
+
+1. `notebooks/confusion_matrix.ipynb`의 Cell 8 수정:
+```python
+API_BASE_URL = "http://localhost:8000/v1"  # vLLM 배포 포트에 맞춰 수정
+API_KEY = "empty"
+```
+
+2. Cell 4 수정:
 ```python
 HF_DATASET_NAME = "your-username/your-dataset-name"
 ```
 
-### 4-3. 노트북 실행
-
-1. `notebooks/confusion_matrix.ipynb` 열기
-2. 셀을 순서대로 실행
-3. 혼동행렬 및 성능 지표 확인
-
-### 4-4. 결과 확인
-
-- 혼동행렬 시각화
-- Accuracy, Precision, Recall, F1 Score
-- 클래스별 상세 리포트
+3. 노트북 실행:
+   - 혼동행렬 시각화
+   - Accuracy, Precision, Recall, F1 Score
+   - 클래스별 상세 리포트
 
 ---
 
