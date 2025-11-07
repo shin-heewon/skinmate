@@ -49,9 +49,7 @@ python pipeline/step5_upload_to_hub.py
 
 ```
 작업 구조:
-├── skin-diagnosis/            # 메인 서비스 (Git 관리)
-│   ├── api/
-│   ├── rag/
+├── skinmate/            # 메인 서비스 (Git 관리)
 │   └── ...
 │
 └── dataset-workspace/         # 데이터셋 작업 (별도 폴더)
