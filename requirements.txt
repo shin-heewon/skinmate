@@ -1,0 +1,14 @@
+# 안면부 피부질환 데이터셋 처리용 패키지
+
+# 필수 패키지 (Step 1, 2 공통)
+datasets>=3.6.0
+pandas
+pillow>=11.0.0
+tqdm
+
+# Step 2 - GPT-4 사용 시 (선택사항)
+langchain-core
+langchain-openai
+python-dotenv
+tiktoken  # 토큰 계산용
+

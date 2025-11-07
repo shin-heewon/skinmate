@@ -1,0 +1,12 @@
+# 데이터셋 폴더
+extracted_data/
+skin_dataset/
+skin_dataset_fixed/
+skin_dataset_temp/
+
+# 환경 변수
+.env
+
+# Python 캐시
+__pycache__/
+*.pyc
