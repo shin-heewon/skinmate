@@ -1,10 +1,10 @@
-# 🚀 Vision-Language 모델 파인튜닝 가이드
+# Vision-Language 모델 파인튜닝 가이드
 
 피부 질환 진단을 위한 Vision-Language 모델 파인튜닝 및 배포 파이프라인입니다.
 
 ---
 
-## 📋 목차
+## 목차
 
 1. [RunPod Pod 생성](#1-runpod-pod-생성)
 2. [Step 1: 데이터셋 학습](#step-1-데이터셋-학습)
@@ -18,12 +18,12 @@
 
 ### 1-1. 필수 요구사항
 
-**⚠️ 중요**: vLLM 배포를 위해서는 **GPU VRAM 48GB 이상**이 필요합니다.
+**중요**: vLLM 배포를 위해서는 **GPU VRAM 48GB 이상**이 필요합니다.
 
 **권장 GPU**:
-- ✅ **RTX A6000** (48GB VRAM) - 추천
-- ⚠️ **RTX A5000** (24GB VRAM) - 학습용으로만 사용 가능, vLLM 배포는 어려움
-- ❌ RTX 4090 (24GB VRAM) - vLLM 배포 불가
+- **RTX A6000** (48GB VRAM) - 추천
+- **RTX A5000** (24GB VRAM) - 학습용으로만 사용 가능, vLLM 배포는 어려움
+- RTX 4090 (24GB VRAM) - vLLM 배포 불가
 
 ### 1-2. Pod 생성 단계
 
@@ -52,7 +52,7 @@
 
 ## Step 1: 데이터셋 학습
 
-### ⚠️ 중요: 실행 환경
+### 중요: 실행 환경
 
 **이 파인튜닝 과정은 RunPod Pod에서 실행해야 합니다.**
 
@@ -64,7 +64,7 @@
 
 ### 1-1. 개인정보 설정
 
-**⚠️ 중요**: 노트북을 실행하기 전에 개인정보를 설정해야 합니다.
+**중요**: 노트북을 실행하기 전에 개인정보를 설정해야 합니다.
 
 #### HuggingFace 토큰 설정
 
@@ -161,7 +161,7 @@ trainer = SFTTrainer(
 - **GPU 메모리가 부족하면**: `batch_size=1, accumulation=8` 사용 권장
 - **GPU 메모리가 충분하면**: `batch_size=2, accumulation=4` 사용 권장
 
-**⚠️ 중요 설정**:
+**중요 설정**:
 - `remove_unused_columns = False`: Vision 모델 필수
 - `dataset_text_field = ""`: Vision 모델 필수
 - `dataset_kwargs = {"skip_prepare_dataset": True}`: Vision 모델 필수
@@ -244,7 +244,7 @@ python3 -m vllm.entrypoints.openai.api_server --model ./model_16bit --dtype bflo
 
 ### 3-2. 자주 발생하는 오류 해결
 
-#### ❌ GPU 메모리 부족 (가장 흔함)
+#### GPU 메모리 부족 (가장 흔함)
 
 **증상**: `CUDA out of memory`
 
@@ -262,7 +262,7 @@ python3 -m vllm.entrypoints.openai.api_server --model ./model_16bit --dtype floa
 nvidia-smi
 ```
 
-#### ⚠️ 기타 오류 (일반적으로 발생할 수 있는 케이스)
+#### 기타 오류 (일반적으로 발생할 수 있는 케이스)
 
 **모델 경로 오류**:
 ```bash
@@ -364,7 +364,7 @@ HF_DATASET_NAME = "your-username/your-dataset-name"
 
 ---
 
-## 🔧 문제 해결 팁
+## 문제 해결 팁
 
 1. **오류 메시지 확인**: 첫 줄부터 읽기
    - `CUDA out of memory` → GPU VRAM 부족
@@ -380,15 +380,15 @@ HF_DATASET_NAME = "your-username/your-dataset-name"
 
 | GPU 모델 | VRAM | 학습 가능 | vLLM 배포 가능 |
 |---------|------|----------|---------------|
-| RTX A6000 | 48GB | ✅ | ✅ |
-| A100 40GB | 40GB | ✅ | ⚠️ (제한적) |
-| A100 80GB | 80GB | ✅ | ✅ |
-| RTX A5000 | 24GB | ✅ | ❌ |
-| RTX 4090 | 24GB | ✅ | ❌ |
+| RTX A6000 | 48GB | 가능 | 가능 |
+| A100 40GB | 40GB | 가능 | 제한적 |
+| A100 80GB | 80GB | 가능 | 가능 |
+| RTX A5000 | 24GB | 가능 | 불가 |
+| RTX 4090 | 24GB | 가능 | 불가 |
 ※a100 모델은 오버 스펙이니 rtx a6000을 추천합니다.
 ---
 
-## 📁 파일 구조
+## 파일 구조
 
 ```
 finetuning/
@@ -401,7 +401,7 @@ finetuning/
 
 ---
 
-## ⚠️ 주의사항
+## 주의사항
 
 1. **Pod 비용**
    - 작업 완료 후 **반드시 Pod를 종료**하세요
@@ -414,7 +414,7 @@ finetuning/
 
 ---
 
-## 📚 참고 자료
+## 참고 자료
 
 - [Unsloth 공식 문서](https://github.com/unslothai/unsloth)
 - [vLLM 공식 문서](https://docs.vllm.ai/)
@@ -422,7 +422,7 @@ finetuning/
 
 ---
 
-## ✅ 체크리스트
+## 체크리스트
 
 파인튜닝 시작 전:
 
@@ -455,5 +455,5 @@ vLLM 배포 전:
 
 ---
 
-**문제가 발생하면 오류 메시지를 자세히 확인하고, 위의 해결 방법을 참고하세요!** 🚀
+**문제가 발생하면 오류 메시지를 자세히 확인하고, 위의 해결 방법을 참고하세요!**
 
