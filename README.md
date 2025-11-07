@@ -9,8 +9,8 @@
 1. [RunPod Pod 생성](#1-runpod-pod-생성)
 2. [Step 1: 데이터셋 학습](#step-1-데이터셋-학습)
 3. [Step 2: 모델 병합](#step-2-모델-병합)
-4. [Step 3: vLLM 배포](#step-3-vllm-배포-중요)
-5. [Step 4: 로컬 평가](#step-4-로컬-평가)
+4. [Step 3: vLLM 배포](#step-3-vllm-배포-⚠️-중요)
+5. [Step 4: 모델 테스트](#step-4-모델-테스트)
 
 ---
 
