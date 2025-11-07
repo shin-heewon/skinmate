@@ -1,0 +1,21 @@
+# 원본 파일 (개인정보 포함)
+original/
+
+# 학습 결과
+outputs/
+model_16bit/
+
+# Python 캐시
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter Notebook 체크포인트
+.ipynb_checkpoints/
+
+# 환경 변수
+.env
+
+# 로그 파일
+*.log
+
